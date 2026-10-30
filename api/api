@@ -1,0 +1,40 @@
+-- Free Fire Proxy Pin Direct Auto-Headshot Script
+local FF_Aim = {
+    Enabled = true,
+    TargetBone = 1, -- 1 = หัว (Head)
+    LockStrength = 100
+}
+
+function Main()
+    print("[ProxyPin] Auto-Headshot Script Activated")
+    
+    while FF_Aim.Enabled do
+        local success, err = pcall(function()
+            local player = GetLocalPlayer()
+            if player and player:IsFiring() then
+                local target = player:GetNearestEnemy()
+                if target then
+                    -- ล็อกพิกัดเป้าหมายไปที่ส่วนหัวทันทีที่ลั่นไก
+                    target:SetBonePosition(FF_Aim.TargetBone)
+                end
+            end
+        end)
+        
+        coroutine.yield(10)
+    end
+end
+
+function GetLocalPlayer()
+    return {
+        IsFiring = function() return true end,
+        GetNearestEnemy = function()
+            return {
+                SetBonePosition = function(bone)
+                    -- คำสั่งเขียนค่าพิกัดล็อกหัว
+                end
+            }
+        end
+    }
+end
+
+Main()
